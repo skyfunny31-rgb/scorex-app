@@ -9,31 +9,71 @@
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: Arial;
       background: black;
       color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       text-align: center;
+      padding-top: 80px;
     }
 
     h1 {
-      font-size: 40px;
       color: #00f5a0;
+      font-size: 40px;
     }
 
-    p {
-      color: #aaa;
+    input {
+      padding: 10px;
+      width: 80%;
+      max-width: 300px;
+      border-radius: 5px;
+      border: none;
+      margin-top: 20px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background: #00f5a0;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    #result {
+      margin-top: 30px;
+      font-size: 24px;
+      color: #00f5a0;
     }
   </style>
 </head>
 
 <body>
-  <div>
-    <h1>ScoreX</h1>
-    <p>Your Wallet. Scored.</p>
-  </div>
+
+  <h1>ScoreX</h1>
+  <p>Your Wallet. Scored.</p>
+
+  <input type="text" id="wallet" placeholder="Enter wallet address">
+  <br>
+  <button onclick="checkScore()">Check Score</button>
+
+  <div id="result"></div>
+
+  <script>
+    function checkScore() {
+      let wallet = document.getElementById("wallet").value;
+
+      if(wallet.length < 5){
+        document.getElementById("result").innerHTML = "Invalid Wallet!";
+        return;
+      }
+
+      // Demo random score
+      let score = Math.floor(Math.random() * 100) + 1;
+
+      document.getElementById("result").innerHTML =
+        "Score: " + score + "/100";
+    }
+  </script>
+
 </body>
-  </html>
+</html>
