@@ -1,79 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="base:app_id" content="69ea4ede1eb4a1de6a9585bc" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ScoreX</title>
+<script>
+async function checkScore(){
+  let wallet = document.getElementById("wallet").value.trim();
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial;
-      background: black;
-      color: white;
-      text-align: center;
-      padding-top: 80px;
+  if(wallet.length < 10){
+    document.getElementById("result").innerHTML = "Invalid wallet address";
+    return;
+  }
+
+  let apiKey = "HWUAMJEJHBGPHHBXM6KY28YC5VC8XVSGEB"; 
+
+  let url = `https://api.etherscan.io/api?module=account&action=txlist&address=${wallet}&startblock=0&endblock=99999999&sort=asc&apikey=${apiKey}`;
+
+  try {
+    let res = await fetch(url);
+    let data = await res.json();
+
+    if(data.status !== "1" || data.result.length === 0){
+      document.getElementById("result").innerHTML = "No transaction data found";
+      return;
     }
 
-    h1 {
-      color: #00f5a0;
-      font-size: 40px;
-    }
+    let txCount = data.result.length;
 
-    input {
-      padding: 10px;
-      width: 80%;
-      max-width: 300px;
-      border-radius: 5px;
-      border: none;
-      margin-top: 20px;
-    }
+    let firstTxTime = data.result[0].timeStamp;
+    let walletAgeDays = (Date.now()/1000 - firstTxTime) / (60*60*24);
 
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      background: #00f5a0;
-      border: none;
-      border-radius: 5px;
-      font-weight: bold;
-    }
+    let ageBonus = Math.min(50, walletAgeDays / 30);
 
-    #result {
-      margin-top: 30px;
-      font-size: 24px;
-      color: #00f5a0;
-    }
-  </style>
-</head>
+    let score = Math.min(100, Math.floor((txCount / 5) + ageBonus));
 
-<body>
+    document.getElementById("result").innerHTML =
+      "Score: " + score + "/100";
 
-  <h1>ScoreX</h1>
-  <p>Your Wallet. Scored.</p>
-
-  <input type="text" id="wallet" placeholder="Enter wallet address">
-  <br>
-  <button onclick="checkScore()">Check Score</button>
-
-  <div id="result"></div>
-
-  <script>
-    function checkScore() {
-      let wallet = document.getElementById("wallet").value;
-
-      if(wallet.length < 5){
-        document.getElementById("result").innerHTML = "Invalid Wallet!";
-        return;
-      }
-
-      // Demo random score
-      let score = Math.floor(Math.random() * 100) + 1;
-
-      document.getElementById("result").innerHTML =
-        "Score: " + score + "/100";
-    }
-  </script>
-
-</body>
-</html>
+  } catch (e) {
+    document.getElementById("result").innerHTML = "Error fetching data";
+  }
+}
+</script>
