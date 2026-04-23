@@ -3,11 +3,11 @@ async function checkScore(){
   let wallet = document.getElementById("wallet").value.trim();
 
   if(wallet.length < 10){
-    document.getElementById("result").innerHTML = "Invalid wallet address";
+    document.getElementById("result").innerHTML = "Invalid wallet";
     return;
   }
 
-  let apiKey = "HWUAMJEJHBGPHHBXM6KY28YC5VC8XVSGEB"; 
+  let apiKey = "YOUR_NEW_API_KEY";
 
   let url = `https://api.etherscan.io/api?module=account&action=txlist&address=${wallet}&startblock=0&endblock=99999999&sort=asc&apikey=${apiKey}`;
 
@@ -15,8 +15,8 @@ async function checkScore(){
     let res = await fetch(url);
     let data = await res.json();
 
-    if(data.status !== "1" || data.result.length === 0){
-      document.getElementById("result").innerHTML = "No transaction data found";
+    if(data.status !== "1"){
+      document.getElementById("result").innerHTML = "No data found";
       return;
     }
 
